@@ -23,8 +23,6 @@ app.use(function(req, res, next) {
     next();
 });
 
-C:\Projects\test\Auth\rest-api\node-rest-auth\app.js
-
 app.use(passport.initialize());
 
 app.get('/', function(req, res) {
