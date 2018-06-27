@@ -11,9 +11,9 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
-let mongoDBUri = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || config.database;
+let mongoDBUri = process.env.MONGODB_URI || process.env.MONGOHQ_URL || config.database;
 
 mongoose.connect(mongoDBUri);
 
