@@ -53,6 +53,28 @@ router.post('/signin', function(req, res) {
     });
 });
 
+router.get('/verify-user', function(req, res) {
+    var token = getToken(req.headers);
+
+    // decode token
+    if (token) {
+        // verifies secret and checks exp
+        jwt.verify(token, config.secret, function (err, decoded) {
+            if (err) {
+                res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
+            } else {
+                // if everything is good, save to request for use in other routes
+                req.decoded = decoded;
+                res.status(200).send({success: true, msg: 'Authorize.'});
+            }
+        });
+    } else {
+        // if there is no token
+        // return an error
+        return res.status(403).send({success: false, msg: 'Unauthorized.'});
+    }
+});
+
 router.post('/article', authMiddleWere, function(req, res) {
     var token = getToken(req.headers);
     if (token) {
@@ -67,6 +89,23 @@ router.post('/article', authMiddleWere, function(req, res) {
                 return res.json({success: false, msg: 'Articles saved failed'});
             }
             res.json({success: true, msg: 'Successful created new article.'});
+        });
+    } else {
+        return res.status(403).send({success: false, msg: 'Unauthorized.'});
+    }
+});
+
+router.post('/article/remove', authMiddleWere, function(req, res) {
+    var token = getToken(req.headers);
+    if (token) {
+
+        Article.remove({ _id: req.body.id }, function(err) {
+            if (err) {
+                return res.json({success: false, msg: 'Article removal failed'});
+            }
+            else {
+                res.json({success: true, msg: 'Article removed.'});
+            }
         });
     } else {
         return res.status(403).send({success: false, msg: 'Unauthorized.'});
