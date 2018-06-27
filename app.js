@@ -5,15 +5,17 @@ var config = require('./config/database');
 var express = require('express');
 var app = express();
 
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
 app.use(bodyParser.json())
 
-mongoose.connect(config.database);
+let mongoDBUri = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || config.database;
+
+mongoose.connect(mongoDBUri);
 
 var api = require('./routes/api');
 
